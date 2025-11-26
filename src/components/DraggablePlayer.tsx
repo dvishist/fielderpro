@@ -41,20 +41,9 @@ export const DraggablePlayer: React.FC<DraggablePlayerProps> = ({
 	const [editedName, setEditedName] = useState(player.name);
 	const planeRef = useRef<THREE.Plane>(new THREE.Plane(new THREE.Vector3(0, 1, 0), 0));
 	const intersectionPoint = useRef<THREE.Vector3>(new THREE.Vector3());
-	const clickTimeRef = useRef<number>(0);
 
 	const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
 		e.stopPropagation();
-
-		// Check for double-click
-		const now = Date.now();
-		if (now - clickTimeRef.current < 300) {
-			// Double-click detected
-			setIsEditingName(true);
-			setEditedName(player.name);
-			return;
-		}
-		clickTimeRef.current = now;
 
 		(e.target as HTMLElement).setPointerCapture(e.pointerId);
 		setIsDragging(true);
@@ -155,6 +144,10 @@ export const DraggablePlayer: React.FC<DraggablePlayerProps> = ({
 					/>
 				) : (
 					<div
+						onClick={() => {
+							setIsEditingName(true);
+							setEditedName(player.name);
+						}}
 						style={{
 							background: "transparent",
 							color: "white",
@@ -163,9 +156,10 @@ export const DraggablePlayer: React.FC<DraggablePlayerProps> = ({
 							fontSize: "90px",
 							fontWeight: "bold",
 							whiteSpace: "nowrap",
-							pointerEvents: "none",
+							pointerEvents: "auto",
 							userSelect: "none",
-							textShadow: "2px 2px 4px rgba(0, 0, 0, 0.8)"
+							textShadow: "2px 2px 4px rgba(0, 0, 0, 0.8)",
+							cursor: "pointer"
 						}}
 					>
 						{player.name}
