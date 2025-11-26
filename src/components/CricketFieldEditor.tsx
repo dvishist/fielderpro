@@ -10,16 +10,22 @@ export const CricketFieldEditor: React.FC = () => {
 	const [players, setPlayers] = useState<Player[]>(initialPlayers);
 	const [isDraggingPlayer, setIsDraggingPlayer] = useState(false);
 	const [showNotification, setShowNotification] = useState(false);
+	const [fieldTitle, setFieldTitle] = useState("My Cricket Field");
+	const [isEditingTitle, setIsEditingTitle] = useState(false);
+	const [editedTitle, setEditedTitle] = useState(fieldTitle);
 
-	// Load players from URL on mount
+	// Load players and title from URL on mount
 	useEffect(() => {
 		const params = new URLSearchParams(window.location.search);
 		const fieldData = params.get("field");
 		if (fieldData) {
 			try {
 				const decoded = atob(fieldData);
-				const loadedPlayers = JSON.parse(decoded) as Player[];
-				setPlayers(loadedPlayers);
+				const loadedData = JSON.parse(decoded) as { players: Player[]; title?: string };
+				setPlayers(loadedData.players);
+				if (loadedData.title) {
+					setFieldTitle(loadedData.title);
+				}
 			} catch (error) {
 				console.error("Failed to load field from URL:", error);
 			}
@@ -47,7 +53,7 @@ export const CricketFieldEditor: React.FC = () => {
 	};
 
 	const generateShareableUrl = () => {
-		const fieldData = JSON.stringify(players);
+		const fieldData = JSON.stringify({ players, title: fieldTitle });
 		const encoded = btoa(fieldData);
 		const url = `${window.location.origin}${window.location.pathname}?field=${encoded}`;
 
@@ -85,6 +91,42 @@ export const CricketFieldEditor: React.FC = () => {
 						Share Field
 					</button>
 				</div>
+			</div>
+
+			{/* Editable Title Section */}
+			<div className="bg-gray-750 text-white p-3 flex justify-center items-center">
+				{isEditingTitle ? (
+					<input
+						type="text"
+						value={editedTitle}
+						onChange={e => setEditedTitle(e.target.value)}
+						onBlur={() => {
+							setFieldTitle(editedTitle);
+							setIsEditingTitle(false);
+						}}
+						onKeyDown={e => {
+							if (e.key === "Enter") {
+								setFieldTitle(editedTitle);
+								setIsEditingTitle(false);
+							} else if (e.key === "Escape") {
+								setEditedTitle(fieldTitle);
+								setIsEditingTitle(false);
+							}
+						}}
+						autoFocus
+						className="bg-gray-700 text-white text-xl font-bold px-4 py-2 border-2 border-blue-400 rounded text-center focus:outline-none focus:border-blue-500"
+					/>
+				) : (
+					<h2
+						onClick={() => {
+							setIsEditingTitle(true);
+							setEditedTitle(fieldTitle);
+						}}
+						className="text-xl font-bold cursor-pointer hover:text-blue-400 transition-colors"
+					>
+						{fieldTitle}
+					</h2>
+				)}
 			</div>
 
 			{/* Player Legend */}

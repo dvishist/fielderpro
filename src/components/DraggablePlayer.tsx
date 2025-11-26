@@ -153,7 +153,7 @@ export const DraggablePlayer: React.FC<DraggablePlayerProps> = ({
 							color: "white",
 							padding: "24px 48px",
 							borderRadius: "4px",
-							fontSize: "90px",
+							fontSize: "180px",
 							fontWeight: "bold",
 							whiteSpace: "nowrap",
 							pointerEvents: "auto",
