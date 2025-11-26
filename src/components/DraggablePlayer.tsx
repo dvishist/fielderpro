@@ -11,6 +11,7 @@ interface DraggablePlayerProps {
 	onNameChange: (id: string, newName: string) => void;
 	onDragStart?: () => void;
 	onDragEnd?: () => void;
+	boundaryRadius: number;
 }
 
 const getPlayerColor = (type: Player["type"]) => {
@@ -33,7 +34,8 @@ export const DraggablePlayer: React.FC<DraggablePlayerProps> = ({
 	onDrag,
 	onNameChange,
 	onDragStart,
-	onDragEnd
+	onDragEnd,
+	boundaryRadius
 }) => {
 	const groupRef = useRef<THREE.Group>(null);
 	const [isDragging, setIsDragging] = useState(false);
@@ -47,12 +49,14 @@ export const DraggablePlayer: React.FC<DraggablePlayerProps> = ({
 
 		(e.target as HTMLElement).setPointerCapture(e.pointerId);
 		setIsDragging(true);
+		document.body.style.cursor = "grabbing";
 		onDragStart?.();
 	};
 
 	const handlePointerUp = (e: ThreeEvent<PointerEvent>) => {
 		(e.target as HTMLElement).releasePointerCapture(e.pointerId);
 		setIsDragging(false);
+		document.body.style.cursor = "grab";
 		onDragEnd?.();
 	};
 
@@ -60,11 +64,19 @@ export const DraggablePlayer: React.FC<DraggablePlayerProps> = ({
 		if (isDragging) {
 			e.stopPropagation();
 			e.ray.intersectPlane(planeRef.current, intersectionPoint.current);
-			const newPosition: [number, number, number] = [
-				intersectionPoint.current.x,
-				player.position[1],
-				intersectionPoint.current.z
-			];
+
+			let x = intersectionPoint.current.x;
+			let z = intersectionPoint.current.z;
+
+			// Constrain within boundary
+			const distFromCenter = Math.sqrt(x * x + z * z);
+			if (distFromCenter > boundaryRadius) {
+				const scale = boundaryRadius / distFromCenter;
+				x *= scale;
+				z *= scale;
+			}
+
+			const newPosition: [number, number, number] = [x, player.position[1], z];
 			onDrag(player.id, newPosition);
 		}
 	};
@@ -83,9 +95,11 @@ export const DraggablePlayer: React.FC<DraggablePlayerProps> = ({
 				onPointerDown={handlePointerDown}
 				onPointerUp={handlePointerUp}
 				onPointerMove={handlePointerMove}
+				onPointerOver={() => (document.body.style.cursor = "grab")}
+				onPointerOut={() => (document.body.style.cursor = "default")}
 			>
 				<boxGeometry args={[3, 6, 3]} />
-				<meshBasicMaterial transparent opacity={0} />
+				<meshBasicMaterial transparent opacity={0} depthWrite={false} />
 			</mesh>
 
 			{/* Body */}

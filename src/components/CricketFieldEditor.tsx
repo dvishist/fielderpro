@@ -3,6 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Environment } from "@react-three/drei";
 import { CricketGround } from "./CricketGround";
 import { DraggablePlayer } from "./DraggablePlayer";
+import { FieldCoverage } from "./FieldCoverage";
 import type { Player } from "../types/cricket";
 import { initialPlayers, fieldMarkings } from "../data/cricketData";
 
@@ -13,6 +14,7 @@ export const CricketFieldEditor: React.FC = () => {
 	const [fieldTitle, setFieldTitle] = useState("My Cricket Field");
 	const [isEditingTitle, setIsEditingTitle] = useState(false);
 	const [editedTitle, setEditedTitle] = useState(fieldTitle);
+	const [showFieldCoverage, setShowFieldCoverage] = useState(true);
 
 	// Load players and title from URL on mount
 	useEffect(() => {
@@ -130,18 +132,37 @@ export const CricketFieldEditor: React.FC = () => {
 			</div>
 
 			{/* Player Legend */}
-			<div className="bg-gray-700 text-white p-2 flex gap-6 text-sm">
-				<div className="flex items-center gap-2">
-					<div className="w-4 h-4 bg-red-500 rounded-full"></div>
-					<span>Bowler</span>
+			<div className="bg-gray-700 text-white p-2 flex gap-6 text-sm items-center justify-between">
+				<div className="flex gap-6">
+					<div className="flex items-center gap-2">
+						<div className="w-4 h-4 bg-red-500 rounded-full"></div>
+						<span>Bowler</span>
+					</div>
+					<div className="flex items-center gap-2">
+						<div className="w-4 h-4 bg-cyan-400 rounded-full"></div>
+						<span>Wicket Keeper</span>
+					</div>
+					<div className="flex items-center gap-2">
+						<div className="w-4 h-4 bg-green-400 rounded-full"></div>
+						<span>Fielders</span>
+					</div>
 				</div>
-				<div className="flex items-center gap-2">
-					<div className="w-4 h-4 bg-cyan-400 rounded-full"></div>
-					<span>Wicket Keeper</span>
-				</div>
-				<div className="flex items-center gap-2">
-					<div className="w-4 h-4 bg-green-400 rounded-full"></div>
-					<span>Fielders</span>
+
+				{/* Field Coverage Toggle */}
+				<div className="flex items-center gap-3">
+					<span className="text-sm font-medium">Field Coverage Analysis</span>
+					<button
+						onClick={() => setShowFieldCoverage(!showFieldCoverage)}
+						className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+							showFieldCoverage ? "bg-blue-600" : "bg-gray-600"
+						}`}
+					>
+						<span
+							className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+								showFieldCoverage ? "translate-x-6" : "translate-x-1"
+							}`}
+						/>
+					</button>
 				</div>
 			</div>
 
@@ -170,6 +191,12 @@ export const CricketFieldEditor: React.FC = () => {
 						pitchLength={fieldMarkings.pitchLength}
 						pitchWidth={fieldMarkings.pitchWidth}
 					/>
+					{/* Field Coverage Visualization */}
+					<FieldCoverage
+						players={players}
+						boundaryRadius={fieldMarkings.boundaryRadius}
+						showCoverage={showFieldCoverage}
+					/>
 					{/* Players */}
 					{players.map(player => (
 						<DraggablePlayer
@@ -179,6 +206,7 @@ export const CricketFieldEditor: React.FC = () => {
 							onNameChange={handleNameChange}
 							onDragStart={() => setIsDraggingPlayer(true)}
 							onDragEnd={() => setIsDraggingPlayer(false)}
+							boundaryRadius={fieldMarkings.boundaryRadius}
 						/>
 					))}{" "}
 					{/* Camera Controls */}
