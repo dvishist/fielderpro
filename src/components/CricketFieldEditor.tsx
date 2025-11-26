@@ -65,7 +65,7 @@ export const CricketFieldEditor: React.FC = () => {
 	};
 
 	return (
-		<div className="w-full h-screen flex flex-col bg-gray-900">
+		<div className="w-full h-screen flex flex-col bg-gray-900 overflow-hidden">
 			{/* Notification */}
 			{showNotification && (
 				<div className="fixed top-4 right-4 bg-green-600 text-white px-6 py-3 rounded shadow-lg z-50 animate-fade-in">
@@ -153,10 +153,10 @@ export const CricketFieldEditor: React.FC = () => {
 			</div>
 
 			{/* Instructions */}
-			<div className="bg-gray-800 text-white p-2 text-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+			<div className="fixed bottom-0 left-0 right-0 bg-gray-800 text-white p-2 text-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 z-10">
 				<p className="flex-shrink">
-					<strong>Instructions:</strong> Click and drag players to reposition them. Double-click to
-					edit names. Click "Share Field" to generate a shareable URL.
+					<strong>Instructions:</strong> Click and drag players to reposition them. Click name to
+					edit. Click "Share Field" to generate a shareable URL.
 				</p>
 
 				<span className="text-green-400 font-bold text-lg whitespace-nowrap">vishist.dev</span>
