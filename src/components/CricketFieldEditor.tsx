@@ -74,14 +74,15 @@ export const CricketFieldEditor: React.FC = () => {
 			)}
 
 			{/* Control Panel */}
-			<div className="bg-gray-800 text-white p-4 flex gap-4 items-center">
+			<div className="bg-gray-800 text-white p-4 flex gap-2 items-center">
 				<h1 className="text-2xl font-bold text-green-400">FielderPro</h1>
+				<h2 className="text-sm text-gray-400">built on vibes</h2>
 				<div className="flex gap-2 ml-auto">
 					<button
 						onClick={generateShareableUrl}
-						className="px-6 py-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 rounded-lg font-bold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 animate-pulse"
+						className="rounded-full px-6 py-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 font-bold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
 					>
-						🔗 Share Field
+						Share Field
 					</button>
 				</div>
 			</div>
