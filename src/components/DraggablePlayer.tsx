@@ -87,12 +87,18 @@ export const DraggablePlayer: React.FC<DraggablePlayerProps> = ({
 	});
 
 	return (
-		<group
-			ref={groupRef}
-			onPointerDown={handlePointerDown}
-			onPointerUp={handlePointerUp}
-			onPointerMove={handlePointerMove}
-		>
+		<group ref={groupRef}>
+			{/* Invisible larger hitbox for easier dragging on mobile */}
+			<mesh
+				position={[0, 2.5, 0]}
+				onPointerDown={handlePointerDown}
+				onPointerUp={handlePointerUp}
+				onPointerMove={handlePointerMove}
+			>
+				<boxGeometry args={[3, 6, 3]} />
+				<meshBasicMaterial transparent opacity={0} />
+			</mesh>
+
 			{/* Body */}
 			<mesh position={[0, 2, 0]}>
 				<boxGeometry args={[1.2, 2.5, 0.8]} />
