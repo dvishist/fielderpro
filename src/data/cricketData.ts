@@ -5,7 +5,7 @@ export const initialPlayers: Player[] = [
 	{ id: "bowler", name: "Bowler", position: [0, 0, 25], type: "bowler" },
 
 	// Wicket Keeper
-	{ id: "wk", name: "Wicket Keeper", position: [0, 0, -20], type: "wicketkeeper" },
+	{ id: "wk", name: "WK", position: [0, 0, -20], type: "wicketkeeper" },
 
 	// Fielders
 	{ id: "slip1", name: "First Slip", position: [-10, 0, -23], type: "fielder" },
