@@ -24,7 +24,7 @@ export const FieldCoverage: React.FC<FieldCoverageProps> = ({
 
 		// Fielders closer to crease have minimal coverage (3-4m), farther have moderate (12-15m)
 		const minRadius = 0.5;
-		const maxRadius = 12;
+		const maxRadius = 16;
 		const normalizedDistance = Math.min(distanceFromCrease / boundaryRadius, 1);
 
 		return minRadius + normalizedDistance * (maxRadius - minRadius);
